@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
+
+.news-item {
+  width: 360px;
+  background-color: #fff;
+  border-radius: 9px;
+  box-shadow: 0px 2px 14px 0px #2a2a2a3d;
+  margin: 1.5em 1em;
+}
+
+.news-item .news-item-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  height: 100%;
+}
+
+.news-item .news-item-container .img {
+  width: 100%;
+  height: 210px;
+}
+
+.news-item .news-item-container .img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  height: 210px;
+  border-top-right-radius: 9px;
+  border-top-left-radius: 9px;
+}
+
+.news-item .news-item-container .news-intor {
+  padding: 1em;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-item .news-item-container .news-intor h3 {
+  font-family: IBM Plex Serif;
+  font-size: 1.5rem;
+  line-height: 27px;
+  margin: 0.5em 0;
+}
+
+.news-item .news-item-container .news-intor div {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.news-item .news-item-container .news-intor .news-decreption {
+  font-family: Nunito Sans;
+  font-size: 1.25rem;
+  line-height: 22px;
+  letter-spacing: 0em;
+  margin: 0.5em 0;
+}
+
+.news-item .news-item-container .news-intor .news-date{
+  margin-bottom: 0.5em;
+  color: gray;
+  font-size: 1.1rem;
+}
+
+.news-item .news-item-container .news-intor .read-more {
+  text-decoration: none;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-color: #0d6efd;
+  border: 1px solid;
+  border-radius: 0.25rem;
+  background-color: #0d6efd;
+  color: #fff;
+  width: 80px;
+  text-align: center;
+}
+
+.news-item .news-item-container .news-intor .read-more:hover {
+  color: #fff;
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
