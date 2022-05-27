@@ -109,7 +109,7 @@ export default class App extends Component {
                 <News
                   pageSize={12}
                   country="in"
-                  category="general"
+                  category="top"
                   setProgress={this.setProgress}
                   key="general"
                 />

@@ -11,42 +11,34 @@ export default class News extends Component {
     this.state = {
       articles: [],
       loading: true,
-      totalResults: 0,
-      page: 1,
-      hasMore: true,
-      pageToLoad: 1,
+      pageToLoad: 0,
     };
   }
 
   componentDidMount() {
     this.props.setProgress(0);
     this.getNews();
+    console.log(process.env.REACT_API_KEY);
   }
 
   getNews = async () => {
     this.props.setProgress(10);
-    this.setState({ page: this.state.page + 1 });
+    this.setState({ loading: true });
     let response = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${process.env.REACT_APP_API_KEY}&page=${this.state.page}&pagesize=${this.props.pageSize}`
+      `https://newsdata.io/api/1/news?apikey=pub_764121485abe0c1907f83110757006d8d540&page=${this.state.pageToLoad}&country=in&language=en&category=${this.props.category}`
     );
     this.props.setProgress(25);
     let news = await response.json();
-    console.log(news);
+    // console.log(news);
     this.props.setProgress(50);
     this.updateState(news);
   };
 
   updateState = (news) => {
     this.setState({
-      articles: this.state.articles.concat(news.articles),
-      totalResults: news.totalResults,
       loading: false,
-    });
-    this.setState({
-      hasMore: this.state.articles.length !== this.state.totalResults,
-      pageToLoad:
-        Math.ceil(this.state.totalResults / this.props.pageSize) -
-        this.state.page,
+      articles: this.state.articles.concat(news.results),
+      pageToLoad: news.nextPage,
     });
     this.props.setProgress(100);
   };
@@ -55,33 +47,40 @@ export default class News extends Component {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  limitString = (string) => {
+    if (!string) return;
+    return string.slice(0, 200).concat("...");
+  };
+
   render() {
     return (
       <div className="news">
         <h1>
-          News Monkey - Top {this.capitalizeFirstLetter(this.props.category)}{" "}
+          News Monkey - {this.capitalizeFirstLetter(this.props.category)}{" "}
           Headlines
         </h1>
         {this.state.loading && <Spinner />}
         <InfiniteScroll
-          dataLength={this.state.page}
+          dataLength={this.state.articles.length}
           next={this.getNews}
-          hasMore={this.state.pageToLoad > 0 && !this.state.loading}
+          hasMore={this.state.pageToLoad != null && !this.state.loading}
           loader={<Spinner />}
         >
           <div className="news-container">
             {this.state.articles.map((element) => {
-              return (
-                <NewsItem
-                  title={element.title}
-                  description={element.description}
-                  imageUrl={element.urlToImage}
-                  key={element.url}
-                  newsUrl={element.url}
-                  author={element.author ? element.author : "Unknown"}
-                  date={element.publishedAt}
-                />
-              );
+              if (element.image_url) {
+                return (
+                  <NewsItem
+                    title={element.title}
+                    description={this.limitString(element.description)}
+                    imageUrl={element.image_url}
+                    key={element.link}
+                    newsUrl={element.link}
+                    author={element.creator ? element.creator : "Unknown"}
+                    date={element.pubDate}
+                  />
+                );
+              }
             })}
           </div>
         </InfiniteScroll>
