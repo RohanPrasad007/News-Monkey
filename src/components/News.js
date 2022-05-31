@@ -18,7 +18,6 @@ export default class News extends Component {
   componentDidMount() {
     this.props.setProgress(0);
     this.getNews();
-    console.log(process.env.REACT_API_KEY);
   }
 
   getNews = async () => {
@@ -29,16 +28,36 @@ export default class News extends Component {
     );
     this.props.setProgress(25);
     let news = await response.json();
-    // console.log(news);
+    console.log(news);
     this.props.setProgress(50);
-    this.updateState(news);
+    this.processNews(news);
+  };
+
+  processNews = (news) => {
+    if (!news) return;
+    let proccedNews = [];
+    news.results.forEach((ele) => {
+      if (ele.image_url) {
+        proccedNews.push(ele);
+        console.log("this is working");
+      }
+    });
+
+    this.setState({
+      pageToLoad: news.nextPage,
+    });
+
+    if (proccedNews.length === 0) {
+      this.getNews();
+    } else {
+      this.updateState(proccedNews);
+    }
   };
 
   updateState = (news) => {
     this.setState({
       loading: false,
-      articles: this.state.articles.concat(news.results),
-      pageToLoad: news.nextPage,
+      articles: this.state.articles.concat(news),
     });
     this.props.setProgress(100);
   };
@@ -68,19 +87,17 @@ export default class News extends Component {
         >
           <div className="news-container">
             {this.state.articles.map((element) => {
-              if (element.image_url) {
-                return (
-                  <NewsItem
-                    title={element.title}
-                    description={this.limitString(element.description)}
-                    imageUrl={element.image_url}
-                    key={element.link}
-                    newsUrl={element.link}
-                    author={element.creator ? element.creator : "Unknown"}
-                    date={element.pubDate}
-                  />
-                );
-              }
+              return (
+                <NewsItem
+                  title={element.title}
+                  description={this.limitString(element.description)}
+                  imageUrl={element.image_url}
+                  key={element.link}
+                  newsUrl={element.link}
+                  author={element.creator ? element.creator : "Unknown"}
+                  date={element.pubDate}
+                />
+              );
             })}
           </div>
         </InfiniteScroll>
